@@ -126,6 +126,7 @@ export class ReviewDetailComponent implements OnInit {
   getTagColor(type: string): string {
     const colors: { [key: string]: string } = {
       'bug': 'red',
+      'type-error': 'magenta',
       'security': 'volcano',
       'performance': 'orange',
       'style': 'blue'
@@ -134,14 +135,15 @@ export class ReviewDetailComponent implements OnInit {
   }
 
   /**
-   * Get icon for finding type
+   * Get icon based on finding type
    */
   getTypeIcon(type: string): string {
     const icons: { [key: string]: string } = {
       'bug': 'bug',
-      'security': 'lock',
-      'performance': 'dashboard',
-      'style': 'highlight'
+      'type-error': 'close-circle',
+      'security': 'shield',
+      'performance': 'thunderbolt',
+      'style': 'file-text'
     };
     return icons[type] || 'info-circle';
   }

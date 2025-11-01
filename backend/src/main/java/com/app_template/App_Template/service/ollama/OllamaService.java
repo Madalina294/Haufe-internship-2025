@@ -53,10 +53,19 @@ public class OllamaService {
 
     /**
      * Initialize WebClient if not already initialized.
+     * Extracts base URL from ollama.api.url configuration.
      */
     private WebClient getWebClient() {
         if (webClient == null) {
-            webClient = webClientBuilder.baseUrl("http://localhost:11434").build();
+            // Extract base URL from ollamaApiUrl (e.g., "http://localhost:11434/api/generate" -> "http://localhost:11434")
+            String baseUrl = ollamaApiUrl;
+            if (baseUrl.contains("/api/generate")) {
+                baseUrl = baseUrl.substring(0, baseUrl.indexOf("/api/generate"));
+            } else if (baseUrl.contains("/api/")) {
+                baseUrl = baseUrl.substring(0, baseUrl.indexOf("/api/"));
+            }
+            log.info("Initializing Ollama WebClient with base URL: {}", baseUrl);
+            webClient = webClientBuilder.baseUrl(baseUrl).build();
         }
         return webClient;
     }
@@ -133,19 +142,31 @@ public class OllamaService {
         prompt.append("CRITICAL INSTRUCTION: You MUST respond with ONLY valid JSON. No text before or after the JSON object.\n\n");
         prompt.append("REQUIRED JSON STRUCTURE (copy this format exactly):\n");
         prompt.append("{\n");
-        prompt.append("  \"summary\": \"A brief one-sentence overview of the overall code quality and purpose\",\n");
+        prompt.append("  \"summary\": \"A brief one-sentence overview identifying main issues (e.g., 'Type mismatch error on line 3 where string type is assigned to number result')\",\n");
         prompt.append("  \"findings\": [\n");
-        prompt.append("    {\"line\": 42, \"type\": \"bug\", \"message\": \"Description of the issue\", \"suggestion\": \"How to fix it\"},\n");
-        prompt.append("    {\"line\": 15, \"type\": \"performance\", \"message\": \"Performance concern\", \"suggestion\": \"Optimization suggestion\"}\n");
+        prompt.append("    {\"line\": 3, \"type\": \"type-error\", \"message\": \"Type mismatch: function add() returns number but result is typed as string\", \"suggestion\": \"Change 'const result: string = add(5, 10);' to 'const result: number = add(5, 10);' or use type inference 'const result = add(5, 10);'\"},\n");
+        prompt.append("    {\"line\": 15, \"type\": \"bug\", \"message\": \"Description of the bug\", \"suggestion\": \"Fixed code: 'corrected code here'\"},\n");
+        prompt.append("    {\"line\": 42, \"type\": \"performance\", \"message\": \"Performance concern\", \"suggestion\": \"Optimization suggestion with example code if applicable\"}\n");
         prompt.append("  ],\n");
         prompt.append("  \"effort_estimation\": \"X/10\"\n");
         prompt.append("}\n\n");
         prompt.append("REVIEW CRITERIA (analyze for):\n");
+        prompt.append("- Type errors (especially in TypeScript: type mismatches, incorrect type annotations)\n");
+        prompt.append("- Syntax errors and compilation issues\n");
+        prompt.append("- Logic errors and bugs\n");
         prompt.append("- Code quality and best practices\n");
         prompt.append("- Performance optimizations\n");
         prompt.append("- Security vulnerabilities\n");
         prompt.append("- Style consistency and maintainability\n");
-        prompt.append("- Potential bugs and edge cases\n\n");
+        prompt.append("- Potential edge cases\n\n");
+        prompt.append("CRITICAL: You MUST identify ALL type errors, syntax errors, and bugs. For EACH finding, provide:\n");
+        prompt.append("1. Exact line number where the error occurs\n");
+        prompt.append("2. Type of issue (bug, type-error, security, performance, style)\n");
+        prompt.append("3. Clear description of the problem\n");
+        prompt.append("4. A COMPLETE CODE FIX or improvement suggestion in the 'suggestion' field.\n");
+        prompt.append("   The suggestion MUST include the corrected code if it's a bug or type error.\n");
+        prompt.append("   Example: \"Change 'const result: string = add(5, 10);' to 'const result: number = add(5, 10);'\"\n");
+        prompt.append("   Or: \"Use 'const result = add(5, 10);' (let TypeScript infer the type)\"\n\n");
         prompt.append("EFFORT ESTIMATION GUIDE:\n");
         prompt.append("- 1-3/10: Minor style issues, very easy to fix\n");
         prompt.append("- 4-6/10: Some bugs or refactoring needed, moderate effort\n");
