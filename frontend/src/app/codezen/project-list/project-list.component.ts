@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
@@ -27,6 +28,7 @@ import { ProjectResponse } from '../../models/project-response';
   imports: [
     CommonModule,
     FormsModule,
+    TranslateModule,
     NzCardModule,
     NzButtonModule,
     NzModalModule,
@@ -70,7 +72,8 @@ export class ProjectListComponent implements OnInit {
     private codezenService: CodezenService,
     private router: Router,
     private message: NzMessageService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -128,7 +131,7 @@ export class ProjectListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error creating project:', error);
-        this.message.error('Failed to create project');
+        this.message.error(this.translate.instant('codezen.projects.createFailed'));
         this.loading.set(false);
       }
     });
@@ -148,19 +151,19 @@ export class ProjectListComponent implements OnInit {
     event.stopPropagation(); // Prevent navigation
 
     this.modal.confirm({
-      nzTitle: 'Delete Project?',
-      nzContent: `Are you sure you want to delete "${project.name}"? This action cannot be undone.`,
-      nzOkText: 'Delete',
+      nzTitle: this.translate.instant('codezen.projects.deleteProject'),
+      nzContent: this.translate.instant('codezen.projects.deleteConfirm', { name: project.name }),
+      nzOkText: this.translate.instant('codezen.projects.delete'),
       nzOkDanger: true,
       nzOnOk: () => {
         this.codezenService.deleteProject(project.id).subscribe({
           next: () => {
-            this.message.success('Project deleted successfully');
+            this.message.success(this.translate.instant('codezen.projects.projectDeleted'));
             this.loadProjects();
           },
           error: (error) => {
             console.error('Error deleting project:', error);
-            this.message.error('Failed to delete project');
+            this.message.error(this.translate.instant('codezen.projects.deleteFailed'));
           }
         });
       }

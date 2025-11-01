@@ -3,23 +3,32 @@
     <div class="header">
       <button nz-button nzType="text" (click)="goBack()">
         <span nz-icon nzType="arrow-left"></span>
-        Back to Project
+        {{ "codezen.reviewDetail.backToProject" | translate }}
       </button>
-      <h1>Code Review #{{ reviewId }}</h1>
+      <h1>
+        {{ "codezen.reviewDetail.codeReview" | translate : { id: reviewId } }}
+      </h1>
     </div>
 
     <div class="review-content" *ngIf="review()">
       <!-- Review Metadata -->
-      <nz-card class="meta-card" nzTitle="Review Information">
+      <nz-card
+        class="meta-card"
+        [nzTitle]="'codezen.reviewDetail.reviewInformation' | translate"
+      >
         <nz-descriptions [nzColumn]="2">
-          <nz-descriptions-item nzTitle="Review ID">
+          <nz-descriptions-item
+            [nzTitle]="'codezen.reviewDetail.reviewId' | translate"
+          >
             #{{ review()!.id }}
           </nz-descriptions-item>
-          <nz-descriptions-item nzTitle="Timestamp">
+          <nz-descriptions-item
+            [nzTitle]="'codezen.reviewDetail.timestamp' | translate"
+          >
             {{ getFormattedDate(review()!.timestamp) }}
           </nz-descriptions-item>
           <nz-descriptions-item
-            nzTitle="Effort Estimation"
+            [nzTitle]="'codezen.reviewDetail.effortEstimation' | translate"
             *ngIf="review()!.effortEstimation"
           >
             <nz-tag [nzColor]="'green'">{{
@@ -32,7 +41,7 @@
       <!-- AI Review Summary -->
       <nz-card
         class="summary-card"
-        nzTitle="AI Review Summary"
+        [nzTitle]="'codezen.reviewDetail.aiReviewSummary' | translate"
         *ngIf="parsedReview()"
       >
         <nz-alert
@@ -46,7 +55,7 @@
       <!-- Findings -->
       <nz-card
         class="findings-card"
-        nzTitle="Findings"
+        [nzTitle]="'codezen.reviewDetail.findings' | translate"
         *ngIf="parsedReview() && parsedReview()!.findings.length > 0"
       >
         <div
@@ -78,21 +87,27 @@
       </nz-card>
 
       <!-- Code Snapshot -->
-      <nz-card class="code-card" nzTitle="Code Snapshot">
+      <nz-card
+        class="code-card"
+        [nzTitle]="'codezen.reviewDetail.codeSnapshot' | translate"
+      >
         <pre class="code-block"><code>{{ review()!.codeSnapshot }}</code></pre>
       </nz-card>
 
       <!-- Raw LLM Response (for debugging) -->
       <nz-card
         class="raw-response-card"
-        nzTitle="Raw AI Response"
+        [nzTitle]="'codezen.reviewDetail.rawAIResponse' | translate"
         *ngIf="review()!.llmResponse"
       >
         <pre class="raw-response">{{ review()!.llmResponse }}</pre>
       </nz-card>
 
       <!-- AI Chat Section -->
-      <nz-card class="chat-card" nzTitle="Ask AI About This Review">
+      <nz-card
+        class="chat-card"
+        [nzTitle]="'codezen.reviewDetail.askAI' | translate"
+      >
         <div class="chat-container">
           <!-- Chat Messages -->
           <nz-spin [nzSpinning]="loadingComments()">
@@ -108,7 +123,7 @@
                   class="empty-icon"
                 ></span>
                 <p>
-                  No questions yet. Ask the AI anything about this code review!
+                  {{ "codezen.reviewDetail.noQuestions" | translate }}
                 </p>
               </div>
 
@@ -131,7 +146,9 @@
                         >
                         </span>
                         <span class="message-role">{{
-                          comment.role === "USER" ? "You" : "AI Assistant"
+                          comment.role === "USER"
+                            ? ("codezen.reviewDetail.you" | translate)
+                            : ("codezen.reviewDetail.aiAssistant" | translate)
                         }}</span>
                         <span class="message-time">{{
                           getFormattedDate(comment.timestamp)
@@ -151,7 +168,9 @@
               <textarea
                 nz-input
                 [(ngModel)]="userQuestion"
-                placeholder="Ask a question about this review... (e.g., 'Can you explain the security issue in more detail?')"
+                [placeholder]="
+                  'codezen.reviewDetail.askPlaceholder' | translate
+                "
                 [nzAutosize]="{ minRows: 2, maxRows: 4 }"
                 (keydown.enter)="onEnterPress($event)"
                 [disabled]="sendingQuestion()"
@@ -168,12 +187,12 @@
                 class="send-button"
               >
                 <span nz-icon nzType="send"></span>
-                Send
+                {{ "codezen.reviewDetail.send" | translate }}
               </button>
             </ng-template>
             <div class="chat-hint">
               <span nz-icon nzType="info-circle"></span>
-              Press Ctrl+Enter to send your question
+              {{ "codezen.reviewDetail.ctrlEnter" | translate }}
             </div>
           </div>
         </div>

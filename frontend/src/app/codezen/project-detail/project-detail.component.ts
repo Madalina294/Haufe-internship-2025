@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
@@ -31,6 +32,7 @@ import { GuidelineResponse } from '../../models/guideline-response';
   imports: [
     CommonModule,
     FormsModule,
+    TranslateModule,
     NzCardModule,
     NzButtonModule,
     NzTabsModule,
@@ -67,7 +69,8 @@ export class ProjectDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private codezenService: CodezenService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +95,7 @@ export class ProjectDetailComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading project:', error);
-        this.message.error('Failed to load project');
+        this.message.error(this.translate.instant('codezen.projects.createFailed'));
         this.loading.set(false);
         this.router.navigate(['/codezen/projects']);
       }
@@ -132,21 +135,21 @@ export class ProjectDetailComponent implements OnInit {
    */
   submitCodeForReview(): void {
     if (!this.code().trim()) {
-      this.message.warning('Please enter some code to review');
+      this.message.warning(this.translate.instant('codezen.projectDetail.pleaseEnterCode'));
       return;
     }
 
     this.reviewLoading.set(true);
     this.codezenService.createReview(this.projectId, { code: this.code() }).subscribe({
       next: (review) => {
-        this.message.success('Code review completed!');
+        this.message.success(this.translate.instant('codezen.projectDetail.reviewSuccess'));
         this.reviews.update(reviews => [review, ...reviews]);
         this.selectedTabIndex.set(1); // Switch to reviews tab
         this.reviewLoading.set(false);
       },
       error: (error) => {
         console.error('Error creating review:', error);
-        this.message.error('Failed to get code review. Make sure Ollama is running.');
+        this.message.error(this.translate.instant('codezen.projectDetail.reviewFailed'));
         this.reviewLoading.set(false);
       }
     });
@@ -157,19 +160,19 @@ export class ProjectDetailComponent implements OnInit {
    */
   addGuideline(): void {
     if (!this.newGuideline().trim()) {
-      this.message.warning('Please enter a guideline');
+      this.message.warning(this.translate.instant('codezen.projectDetail.guidelinePlaceholder'));
       return;
     }
 
     this.codezenService.addGuideline(this.projectId, { ruleText: this.newGuideline() }).subscribe({
       next: (guideline) => {
-        this.message.success('Guideline added successfully');
+        this.message.success(this.translate.instant('codezen.projectDetail.guidelineAdded'));
         this.guidelines.update(guidelines => [...guidelines, guideline]);
         this.newGuideline.set('');
       },
       error: (error) => {
         console.error('Error adding guideline:', error);
-        this.message.error('Failed to add guideline');
+        this.message.error(this.translate.instant('codezen.projectDetail.guidelineFailed'));
       }
     });
   }
@@ -264,6 +267,6 @@ export class ProjectDetailComponent implements OnInit {
     };
 
     this.code.set(samples[proj?.language || 'java'] || samples['java']);
-    this.message.info('Sample code loaded');
+    this.message.info(this.translate.instant('codezen.projectDetail.loadSample'));
   }
 }

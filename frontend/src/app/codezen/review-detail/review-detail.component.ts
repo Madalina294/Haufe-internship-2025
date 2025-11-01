@@ -2,6 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzIconModule } from 'ng-zorro-antd/icon';
@@ -29,6 +30,7 @@ import { CommentResponse } from '../../models/comment-response';
   imports: [
     CommonModule,
     FormsModule,
+    TranslateModule,
     NzCardModule,
     NzButtonModule,
     NzIconModule,
@@ -62,7 +64,8 @@ export class ReviewDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private codezenService: CodezenService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -90,7 +93,7 @@ export class ReviewDetailComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading review:', error);
-        this.message.error('Failed to load review');
+        this.message.error(this.translate.instant('codezen.projectDetail.reviewFailed'));
         this.loading.set(false);
         this.goBack();
       }
@@ -176,7 +179,7 @@ export class ReviewDetailComponent implements OnInit {
    */
   askQuestion(): void {
     if (!this.userQuestion.trim()) {
-      this.message.warning('Please enter a question');
+      this.message.warning(this.translate.instant('codezen.reviewDetail.enterQuestion'));
       return;
     }
 
@@ -202,7 +205,7 @@ export class ReviewDetailComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error asking question:', error);
-        this.message.error('Failed to get AI response');
+        this.message.error(this.translate.instant('codezen.reviewDetail.questionFailed'));
         // Remove temporary user comment on error
         this.comments.update(comments => comments.filter(c => c.id !== Date.now()));
         this.sendingQuestion.set(false);

@@ -24,24 +24,31 @@
       </div>
       <div class="profile-info">
         <h2>{{ user.firstname }} {{ user.lastname }}</h2>
-        <p class="user-role">
-          {{ "welcome.profile.role" | translate }}: {{ user.role }}
-        </p>
-        <p class="user-id">
-          {{ "welcome.profile.userId" | translate }}: {{ user.id }}
-        </p>
+        <p class="user-email" *ngIf="user.email">{{ user.email }}</p>
       </div>
     </div>
   </div>
 
   <div class="actions">
-    <button (click)="logout()" class="logout-btn">
-      {{ "welcome.actions.logout" | translate }}
-    </button>
-    <!-- Adaugă acest buton în welcome page -->
-    <button nz-button nzType="primary" nzSize="large" routerLink="/codezen/projects">
+    <button
+      nz-button
+      nzType="primary"
+      nzSize="large"
+      routerLink="/codezen/projects"
+      class="primary-action"
+    >
       <span nz-icon nzType="code"></span>
-      Go to CodeZen
+      {{ "codezen.welcome.goToCodeZen" | translate }}
+    </button>
+    <button
+      nz-button
+      nzType="default"
+      nzSize="large"
+      (click)="logout()"
+      class="logout-btn"
+    >
+      <span nz-icon nzType="logout"></span>
+      {{ "welcome.actions.logout" | translate }}
     </button>
   </div>
 </div>
