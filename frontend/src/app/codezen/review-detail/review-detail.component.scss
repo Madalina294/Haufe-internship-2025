@@ -1,0 +1,112 @@
+.review-detail-container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .header {
+    margin-bottom: 24px;
+
+    h1 {
+      margin: 8px 0 0 0;
+      font-size: 28px;
+      font-weight: 600;
+      color: #262626;
+    }
+  }
+
+  .review-content {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .meta-card,
+    .summary-card,
+    .findings-card,
+    .code-card,
+    .raw-response-card {
+      border-radius: 8px;
+    }
+
+    .findings-card {
+      .finding-item {
+        padding: 16px 0;
+
+        &:first-child {
+          padding-top: 0;
+        }
+
+        &:last-child {
+          padding-bottom: 0;
+        }
+
+        .finding-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 12px;
+
+          .finding-line {
+            color: #8c8c8c;
+            font-size: 13px;
+          }
+        }
+
+        .finding-message {
+          margin-bottom: 8px;
+          line-height: 1.6;
+
+          strong {
+            color: #262626;
+          }
+        }
+
+        .finding-suggestion {
+          padding: 12px;
+          background-color: #f6ffed;
+          border-left: 3px solid #52c41a;
+          border-radius: 4px;
+          line-height: 1.6;
+
+          strong {
+            color: #389e0d;
+          }
+        }
+      }
+    }
+
+    .code-card {
+      .code-block {
+        margin: 0;
+        padding: 16px;
+        background-color: #fafafa;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+
+        code {
+          color: #262626;
+        }
+      }
+    }
+
+    .raw-response-card {
+      .raw-response {
+        margin: 0;
+        padding: 16px;
+        background-color: #f5f5f5;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        overflow-x: auto;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 12px;
+        line-height: 1.5;
+        color: #595959;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+    }
+  }
+}

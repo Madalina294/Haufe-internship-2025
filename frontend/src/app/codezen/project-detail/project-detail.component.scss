@@ -1,0 +1,115 @@
+.project-detail-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .header {
+    margin-bottom: 24px;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 600;
+        color: #262626;
+      }
+    }
+  }
+
+  .main-card {
+    border-radius: 8px;
+
+    .editor-section {
+      .editor-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        h3 {
+          margin: 0;
+          font-size: 18px;
+          font-weight: 600;
+        }
+
+        .editor-actions {
+          display: flex;
+          gap: 8px;
+        }
+      }
+
+      .code-editor {
+        width: 100%;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        padding: 16px;
+        border: 1px solid #d9d9d9;
+        border-radius: 4px;
+        background-color: #fafafa;
+        resize: vertical;
+
+        &:focus {
+          outline: none;
+          border-color: #40a9ff;
+          box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+        }
+
+        &:disabled {
+          background-color: #f5f5f5;
+          cursor: not-allowed;
+        }
+      }
+
+      .editor-info {
+        margin-top: 12px;
+        padding: 8px 12px;
+        background-color: #e6f7ff;
+        border: 1px solid #91d5ff;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #0050b3;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+    }
+
+    .reviews-section,
+    .guidelines-section {
+      padding: 16px 0;
+    }
+
+    .guidelines-section {
+      .guidelines-header {
+        margin-bottom: 24px;
+
+        h3 {
+          margin: 0 0 8px 0;
+          font-size: 18px;
+          font-weight: 600;
+        }
+
+        p {
+          margin: 0;
+          color: #8c8c8c;
+          font-size: 14px;
+        }
+      }
+
+      .add-guideline {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+
+        textarea {
+          flex: 1;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+<div class="project-list-container">
+  <div class="header">
+    <h1>CodeZen Projects</h1>
+    <button nz-button nzType="primary" (click)="showCreateModal()">
+      <span nz-icon nzType="plus"></span>
+      New Project
+    </button>
+  </div>
+
+  <nz-spin [nzSpinning]="loading()">
+    <div class="projects-grid" *ngIf="projects().length > 0; else emptyState">
+      <nz-card
+        *ngFor="let project of projects()"
+        class="project-card"
+        [nzHoverable]="true"
+        (click)="openProject(project.id)">
+
+        <div class="project-header">
+          <h3>{{ project.name }}</h3>
+          <button
+            nz-button
+            nzType="text"
+            nzDanger
+            (click)="deleteProject(project, $event)">
+            <span nz-icon nzType="delete"></span>
+          </button>
+        </div>
+
+        <div class="project-meta">
+          <span class="language-tag">
+            <span nz-icon nzType="code"></span>
+            {{ project.language }}
+          </span>
+          <span class="date">
+            <span nz-icon nzType="calendar"></span>
+            {{ getFormattedDate(project.createdAt) }}
+          </span>
+        </div>
+
+        <div class="project-owner">
+          <span nz-icon nzType="user"></span>
+          {{ project.ownerEmail }}
+        </div>
+      </nz-card>
+    </div>
+
+    <ng-template #emptyState>
+      <nz-empty
+        nzNotFoundContent="No projects yet"
+        [nzNotFoundFooter]="footerTpl">
+        <ng-template #footerTpl>
+          <button nz-button nzType="primary" (click)="showCreateModal()">
+            Create Your First Project
+          </button>
+        </ng-template>
+      </nz-empty>
+    </ng-template>
+  </nz-spin>
+
+  <!-- Create Project Modal -->
+  <nz-modal
+    [(nzVisible)]="isModalVisible"
+    nzTitle="Create New Project"
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="createProject()">
+
+    <ng-container *nzModalContent>
+      <form nz-form>
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Project Name</nz-form-label>
+          <nz-form-control [nzSpan]="24">
+            <input
+              nz-input
+              [(ngModel)]="newProject.name"
+              name="projectName"
+              placeholder="Enter project name"
+              [maxlength]="100" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label [nzSpan]="24" nzRequired>Programming Language</nz-form-label>
+          <nz-form-control [nzSpan]="24">
+            <nz-select
+              [(ngModel)]="newProject.language"
+              name="language"
+              nzPlaceHolder="Select language">
+              <nz-option
+                *ngFor="let lang of languages"
+                [nzValue]="lang.value"
+                [nzLabel]="lang.label">
+              </nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </ng-container>
+  </nz-modal>
+</div>

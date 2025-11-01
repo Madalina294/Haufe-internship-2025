@@ -1,0 +1,190 @@
+<div class="project-detail-container">
+  <nz-spin [nzSpinning]="loading()">
+    <div class="header" *ngIf="project()">
+      <div class="header-left">
+        <button nz-button nzType="text" (click)="goBack()">
+          <span nz-icon nzType="arrow-left"></span>
+          Back
+        </button>
+        <h1>{{ project()!.name }}</h1>
+        <nz-tag [nzColor]="'blue'">
+          <span nz-icon nzType="code"></span>
+          {{ project()!.language }}
+        </nz-tag>
+      </div>
+    </div>
+
+    <nz-card class="main-card">
+      <nz-tabset [(nzSelectedIndex)]="selectedTabIndex">
+
+        <!-- Code Editor Tab -->
+        <nz-tab nzTitle="Code Review">
+          <ng-template nz-tab>
+            <div class="editor-section">
+              <div class="editor-header">
+                <h3>Submit Code for AI Review</h3>
+                <div class="editor-actions">
+                  <button
+                    nz-button
+                    nzType="default"
+                    (click)="loadSampleCode()">
+                    <span nz-icon nzType="file-text"></span>
+                    Load Sample
+                  </button>
+                  <button
+                    nz-button
+                    nzType="primary"
+                    [nzLoading]="reviewLoading()"
+                    (click)="submitCodeForReview()">
+                    <span nz-icon nzType="api"></span>
+                    Get AI Review
+                  </button>
+                </div>
+              </div>
+
+              <textarea
+                class="code-editor"
+                [ngModel]="code()"
+                (ngModelChange)="code.set($event)"
+                placeholder="Paste your code here..."
+                [disabled]="reviewLoading()"
+                rows="20">
+              </textarea>
+
+              <div class="editor-info">
+                <span nz-icon nzType="info-circle"></span>
+                Powered by Ollama - Make sure Ollama is running locally
+              </div>
+            </div>
+          </ng-template>
+        </nz-tab>
+
+        <!-- Reviews History Tab -->
+        <nz-tab [nzTitle]="reviewsTitle">
+          <ng-template #reviewsTitle>
+            <span>
+              <span nz-icon nzType="file-text"></span>
+              Reviews ({{ reviews().length }})
+            </span>
+          </ng-template>
+
+          <ng-template nz-tab>
+            <div class="reviews-section">
+              <nz-list
+                *ngIf="reviews().length > 0; else noReviews"
+                [nzDataSource]="reviews()"
+                [nzRenderItem]="reviewItem">
+
+                <ng-template #reviewItem let-review>
+                  <nz-list-item [nzActions]="[viewAction]">
+                    <nz-list-item-meta>
+                      <nz-list-item-meta-title>
+                        Review #{{ review.id }}
+                        <nz-tag
+                          *ngIf="review.effortEstimation"
+                          [nzColor]="'green'">
+                          Effort: {{ review.effortEstimation }}
+                        </nz-tag>
+                      </nz-list-item-meta-title>
+                      <nz-list-item-meta-description>
+                        {{ getFormattedDate(review.timestamp) }}
+                      </nz-list-item-meta-description>
+                    </nz-list-item-meta>
+
+                    <ng-template #viewAction>
+                      <button
+                        nz-button
+                        nzType="link"
+                        (click)="viewReview(review)">
+                        View Details
+                      </button>
+                    </ng-template>
+                  </nz-list-item>
+                </ng-template>
+              </nz-list>
+
+              <ng-template #noReviews>
+                <nz-empty
+                  nzNotFoundContent="No reviews yet"
+                  [nzNotFoundFooter]="noReviewsFooter">
+                  <ng-template #noReviewsFooter>
+                    <button
+                      nz-button
+                      nzType="primary"
+                      (click)="selectedTabIndex.set(0)">
+                      Submit Your First Review
+                    </button>
+                  </ng-template>
+                </nz-empty>
+              </ng-template>
+            </div>
+          </ng-template>
+        </nz-tab>
+
+        <!-- Custom Guidelines Tab -->
+        <nz-tab [nzTitle]="guidelinesTitle">
+          <ng-template #guidelinesTitle>
+            <span>
+              <span nz-icon nzType="book"></span>
+              Guidelines ({{ guidelines().length }})
+            </span>
+          </ng-template>
+
+          <ng-template nz-tab>
+            <div class="guidelines-section">
+              <div class="guidelines-header">
+                <h3>Custom Review Guidelines</h3>
+                <p>Define project-specific rules that will be included in AI reviews</p>
+              </div>
+
+              <div class="add-guideline">
+                <textarea
+                  nz-input
+                  [ngModel]="newGuideline()"
+                  (ngModelChange)="newGuideline.set($event)"
+                  placeholder="Enter a custom guideline (e.g., 'Always use final keyword for class fields')"
+                  [nzAutosize]="{ minRows: 2, maxRows: 4 }">
+                </textarea>
+                <button
+                  nz-button
+                  nzType="primary"
+                  (click)="addGuideline()">
+                  <span nz-icon nzType="plus"></span>
+                  Add Guideline
+                </button>
+              </div>
+
+              <nz-divider></nz-divider>
+
+              <nz-list
+                *ngIf="guidelines().length > 0; else noGuidelines"
+                [nzDataSource]="guidelines()"
+                [nzRenderItem]="guidelineItem">
+
+                <ng-template #guidelineItem let-guideline>
+                  <nz-list-item>
+                    <nz-list-item-meta>
+                      <nz-list-item-meta-avatar>
+                        <span nz-icon nzType="check-circle" nzTheme="fill" style="color: #52c41a;"></span>
+                      </nz-list-item-meta-avatar>
+                      <nz-list-item-meta-description>
+                        {{ guideline.ruleText }}
+                      </nz-list-item-meta-description>
+                    </nz-list-item-meta>
+                  </nz-list-item>
+                </ng-template>
+              </nz-list>
+
+              <ng-template #noGuidelines>
+                <nz-empty
+                  nzNotFoundContent="No custom guidelines yet"
+                  nzNotFoundImage="simple">
+                </nz-empty>
+              </ng-template>
+            </div>
+          </ng-template>
+        </nz-tab>
+      </nz-tabset>
+    </nz-card>
+  </nz-spin>
+</div>

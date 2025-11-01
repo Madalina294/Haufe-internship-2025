@@ -1,0 +1,92 @@
+.project-list-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+
+    h1 {
+      margin: 0;
+      font-size: 32px;
+      font-weight: 600;
+      color: #1890ff;
+    }
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 24px;
+
+    .project-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 8px;
+
+      &:hover {
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        transform: translateY(-4px);
+      }
+
+      .project-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        h3 {
+          margin: 0;
+          font-size: 20px;
+          font-weight: 600;
+          color: #262626;
+        }
+
+        button {
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+      }
+
+      &:hover .project-header button {
+        opacity: 1;
+      }
+
+      .project-meta {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 12px;
+
+        .language-tag,
+        .date {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 14px;
+          color: #8c8c8c;
+
+          span[nz-icon] {
+            font-size: 16px;
+          }
+        }
+
+        .language-tag {
+          color: #1890ff;
+          font-weight: 500;
+        }
+      }
+
+      .project-owner {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: #8c8c8c;
+      }
+    }
+  }
+}

@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import {StorageService} from '../../services/storage/storage.service';
 import {NgIf} from '@angular/common';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { UserStateService } from '../../services/user-state/user-state.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-welcome',
-  imports: [NgIf, TranslateModule],
+  imports: [NgIf, TranslateModule, NzButtonComponent, NzIconDirective, RouterLink],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.scss'
 })

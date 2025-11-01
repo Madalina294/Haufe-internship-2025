@@ -9,6 +9,9 @@ import {ResetPasswordComponent} from './pages/reset-password/reset-password.comp
 import {EnterEmailComponent} from './pages/enter-email/enter-email.component';
 import {OAuthCallbackComponent} from './auth/oauth-callback/oauth-callback.component';
 import {EditPreferencesComponent} from './pages/edit-preferences/edit-preferences.component';
+import {ProjectDetailComponent} from './codezen/project-detail/project-detail.component';
+import {ReviewDetailComponent} from './codezen/review-detail/review-detail.component';
+import {ProjectListComponent} from './codezen/project-list/project-list.component';
 
 export const routes: Routes = [
   {path:"", redirectTo: "login", pathMatch: "full"},
@@ -21,6 +24,9 @@ export const routes: Routes = [
   {path: 'edit-preferences', component: EditPreferencesComponent, canActivate: [authGuard]},
   {path: 'reset-password', component: ResetPasswordComponent},
   {path: 'enter-email', component: EnterEmailComponent},
+  {path: 'codezen/projects', component: ProjectListComponent, canActivate: [authGuard]},
+  {path: 'codezen/project/:id', component: ProjectDetailComponent, canActivate: [authGuard]},
+  {path: 'codezen/project/:projectId/review/:reviewId', component: ReviewDetailComponent, canActivate: [authGuard]},
   {path:"admin", loadChildren:() =>
       import("./admin/admin.module").then(e => e.AdminModule)},
   {path:"user", loadChildren:() =>

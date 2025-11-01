@@ -38,5 +38,10 @@
     <button (click)="logout()" class="logout-btn">
       {{ "welcome.actions.logout" | translate }}
     </button>
+    <!-- Adaugă acest buton în welcome page -->
+    <button nz-button nzType="primary" nzSize="large" routerLink="/codezen/projects">
+      <span nz-icon nzType="code"></span>
+      Go to CodeZen
+    </button>
   </div>
 </div>

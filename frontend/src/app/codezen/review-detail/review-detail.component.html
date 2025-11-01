@@ -1,0 +1,70 @@
+<div class="review-detail-container">
+  <nz-spin [nzSpinning]="loading()">
+    <div class="header">
+      <button nz-button nzType="text" (click)="goBack()">
+        <span nz-icon nzType="arrow-left"></span>
+        Back to Project
+      </button>
+      <h1>Code Review #{{ reviewId }}</h1>
+    </div>
+
+    <div class="review-content" *ngIf="review()">
+      <!-- Review Metadata -->
+      <nz-card class="meta-card" nzTitle="Review Information">
+        <nz-descriptions [nzColumn]="2">
+          <nz-descriptions-item nzTitle="Review ID">
+            #{{ review()!.id }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Timestamp">
+            {{ getFormattedDate(review()!.timestamp) }}
+          </nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Effort Estimation" *ngIf="review()!.effortEstimation">
+            <nz-tag [nzColor]="'green'">{{ review()!.effortEstimation }}</nz-tag>
+          </nz-descriptions-item>
+        </nz-descriptions>
+      </nz-card>
+
+      <!-- AI Review Summary -->
+      <nz-card class="summary-card" nzTitle="AI Review Summary" *ngIf="parsedReview()">
+        <nz-alert
+          nzType="info"
+          [nzMessage]="parsedReview()!.summary"
+          nzShowIcon>
+        </nz-alert>
+      </nz-card>
+
+      <!-- Findings -->
+      <nz-card class="findings-card" nzTitle="Findings" *ngIf="parsedReview() && parsedReview()!.findings.length > 0">
+        <div class="finding-item" *ngFor="let finding of parsedReview()!.findings; let i = index">
+          <div class="finding-header">
+            <nz-tag [nzColor]="getTagColor(finding.type)">
+              <span nz-icon [nzType]="getTypeIcon(finding.type)"></span>
+              {{ finding.type | uppercase }}
+            </nz-tag>
+            <span class="finding-line" *ngIf="finding.line">Line {{ finding.line }}</span>
+          </div>
+
+          <div class="finding-message">
+            <strong>Issue:</strong> {{ finding.message }}
+          </div>
+
+          <div class="finding-suggestion" *ngIf="finding.suggestion">
+            <strong>Suggestion:</strong> {{ finding.suggestion }}
+          </div>
+
+          <nz-divider *ngIf="i < parsedReview()!.findings.length - 1"></nz-divider>
+        </div>
+      </nz-card>
+
+      <!-- Code Snapshot -->
+      <nz-card class="code-card" nzTitle="Code Snapshot">
+        <pre class="code-block"><code>{{ review()!.codeSnapshot }}</code></pre>
+      </nz-card>
+
+      <!-- Raw LLM Response (for debugging) -->
+      <nz-card class="raw-response-card" nzTitle="Raw AI Response" *ngIf="review()!.llmResponse">
+        <pre class="raw-response">{{ review()!.llmResponse }}</pre>
+      </nz-card>
+    </div>
+  </nz-spin>
+</div>
