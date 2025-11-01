@@ -291,4 +291,14 @@ export class CodezenService {
       { headers: this.getAuthHeaders() }
     );
   }
+
+  /**
+   * Delete a guideline from a project
+   */
+  deleteGuideline(projectId: number, guidelineId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}/${projectId}/guidelines/${guidelineId}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
 }

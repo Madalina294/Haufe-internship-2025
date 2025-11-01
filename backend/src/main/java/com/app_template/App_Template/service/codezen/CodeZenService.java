@@ -184,6 +184,20 @@ public class CodeZenService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Delete a guideline from a project (must belong to user's project).
+     */
+    @Transactional
+    public void deleteGuideline(Long projectId, Long guidelineId, User user) {
+        Project project = projectRepository.findByIdAndOwner(projectId, user)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found"));
+
+        CustomGuideline guideline = guidelineRepository.findByIdAndProject(guidelineId, project)
+                .orElseThrow(() -> new EntityNotFoundException("Guideline not found"));
+
+        guidelineRepository.delete(guideline);
+    }
+
     // Helper methods for mapping entities to DTOs
 
     private ProjectResponse mapToProjectResponse(Project project) {

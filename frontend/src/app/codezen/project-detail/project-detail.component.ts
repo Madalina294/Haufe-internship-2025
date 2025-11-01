@@ -13,7 +13,7 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzEmptyModule } from 'ng-zorro-antd/empty';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzModalModule, NzModalService } from 'ng-zorro-antd/modal';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 
 import { CodezenService } from '../service/codezen.service';
@@ -70,7 +70,8 @@ export class ProjectDetailComponent implements OnInit {
     private router: Router,
     private codezenService: CodezenService,
     private message: NzMessageService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private modal: NzModalService
   ) {}
 
   ngOnInit(): void {
@@ -173,6 +174,33 @@ export class ProjectDetailComponent implements OnInit {
       error: (error) => {
         console.error('Error adding guideline:', error);
         this.message.error(this.translate.instant('codezen.projectDetail.guidelineFailed'));
+      }
+    });
+  }
+
+  /**
+   * Delete a guideline with confirmation
+   */
+  deleteGuideline(guideline: GuidelineResponse, event: Event): void {
+    event.stopPropagation(); // Prevent any other action
+
+    this.modal.confirm({
+      nzTitle: this.translate.instant('codezen.projectDetail.deleteGuideline'),
+      nzContent: this.translate.instant('codezen.projectDetail.deleteGuidelineConfirm', { text: guideline.ruleText.substring(0, 50) }),
+      nzOkText: this.translate.instant('codezen.projects.delete'),
+      nzOkDanger: true,
+      nzCancelText: this.translate.instant('codezen.projects.cancel'),
+      nzOnOk: () => {
+        this.codezenService.deleteGuideline(this.projectId, guideline.id).subscribe({
+          next: () => {
+            this.message.success(this.translate.instant('codezen.projectDetail.guidelineDeleted'));
+            this.guidelines.update(guidelines => guidelines.filter(g => g.id !== guideline.id));
+          },
+          error: (error) => {
+            console.error('Error deleting guideline:', error);
+            this.message.error(this.translate.instant('codezen.projectDetail.guidelineDeleteFailed'));
+          }
+        });
       }
     });
   }

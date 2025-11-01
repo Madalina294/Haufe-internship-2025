@@ -353,6 +353,10 @@
       "reviewFailed": "Eroare la crearea review-ului",
       "guidelineAdded": "Ghid adăugat cu succes",
       "guidelineFailed": "Eroare la adăugarea ghidului",
+      "deleteGuideline": "Șterge Ghid?",
+      "deleteGuidelineConfirm": "Ești sigur că vrei să ștergi acest ghid? \"{{text}}\" Această acțiune nu poate fi anulată.",
+      "guidelineDeleted": "Ghid șters cu succes",
+      "guidelineDeleteFailed": "Eroare la ștergerea ghidului",
       "loadSample": "Cod exemplu încărcat",
       "pleaseEnterCode": "Te rugăm introdu cod pentru review"
     },

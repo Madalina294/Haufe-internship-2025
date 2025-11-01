@@ -18,4 +18,9 @@ public interface CustomGuidelineRepository extends JpaRepository<CustomGuideline
      * Find all guidelines for a specific project.
      */
     List<CustomGuideline> findByProjectOrderById(Project project);
+
+    /**
+     * Find a guideline by ID and project (for security verification).
+     */
+    java.util.Optional<CustomGuideline> findByIdAndProject(Long id, Project project);
 }

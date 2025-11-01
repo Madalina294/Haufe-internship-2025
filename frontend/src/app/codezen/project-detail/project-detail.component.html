@@ -16,7 +16,6 @@
 
     <nz-card class="main-card">
       <nz-tabset [(nzSelectedIndex)]="selectedTabIndex">
-
         <!-- Code Editor Tab -->
         <nz-tab [nzTitle]="'codezen.projectDetail.codeReview' | translate">
           <ng-template nz-tab>
@@ -24,10 +23,7 @@
               <div class="editor-header">
                 <h3>{{ "codezen.projectDetail.submitCode" | translate }}</h3>
                 <div class="editor-actions">
-                  <button
-                    nz-button
-                    nzType="default"
-                    (click)="loadSampleCode()">
+                  <button nz-button nzType="default" (click)="loadSampleCode()">
                     <span nz-icon nzType="file-text"></span>
                     {{ "codezen.projectDetail.loadSample" | translate }}
                   </button>
@@ -35,7 +31,8 @@
                     nz-button
                     nzType="primary"
                     [nzLoading]="reviewLoading()"
-                    (click)="submitCodeForReview()">
+                    (click)="submitCodeForReview()"
+                  >
                     <span nz-icon nzType="api"></span>
                     {{ "codezen.projectDetail.getAIReview" | translate }}
                   </button>
@@ -46,9 +43,12 @@
                 class="code-editor"
                 [ngModel]="code()"
                 (ngModelChange)="code.set($event)"
-                [placeholder]="'codezen.projectDetail.codePlaceholder' | translate"
+                [placeholder]="
+                  'codezen.projectDetail.codePlaceholder' | translate
+                "
                 [disabled]="reviewLoading()"
-                rows="20">
+                rows="20"
+              >
               </textarea>
 
               <div class="editor-info">
@@ -64,7 +64,9 @@
           <ng-template #reviewsTitle>
             <span>
               <span nz-icon nzType="file-text"></span>
-              {{ "codezen.projectDetail.reviews" | translate }} ({{ reviews().length }})
+              {{ "codezen.projectDetail.reviews" | translate }} ({{
+                reviews().length
+              }})
             </span>
           </ng-template>
 
@@ -73,17 +75,25 @@
               <nz-list
                 *ngIf="reviews().length > 0; else noReviews"
                 [nzDataSource]="reviews()"
-                [nzRenderItem]="reviewItem">
-
+                [nzRenderItem]="reviewItem"
+              >
                 <ng-template #reviewItem let-review>
                   <nz-list-item [nzActions]="[viewAction]">
                     <nz-list-item-meta>
                       <nz-list-item-meta-title>
-                        {{ "codezen.projectDetail.reviewId" | translate: {id: review.id} }}
+                        {{
+                          "codezen.projectDetail.reviewId"
+                            | translate : { id: review.id }
+                        }}
                         <nz-tag
                           *ngIf="review.effortEstimation"
-                          [nzColor]="'green'">
-                          {{ "codezen.projectDetail.effort" | translate: {estimation: review.effortEstimation} }}
+                          [nzColor]="'green'"
+                        >
+                          {{
+                            "codezen.projectDetail.effort"
+                              | translate
+                                : { estimation: review.effortEstimation }
+                          }}
                         </nz-tag>
                       </nz-list-item-meta-title>
                       <nz-list-item-meta-description>
@@ -95,7 +105,8 @@
                       <button
                         nz-button
                         nzType="link"
-                        (click)="viewReview(review)">
+                        (click)="viewReview(review)"
+                      >
                         {{ "codezen.projectDetail.viewDetails" | translate }}
                       </button>
                     </ng-template>
@@ -105,14 +116,20 @@
 
               <ng-template #noReviews>
                 <nz-empty
-                  [nzNotFoundContent]="'codezen.projectDetail.noReviews' | translate"
-                  [nzNotFoundFooter]="noReviewsFooter">
+                  [nzNotFoundContent]="
+                    'codezen.projectDetail.noReviews' | translate
+                  "
+                  [nzNotFoundFooter]="noReviewsFooter"
+                >
                   <ng-template #noReviewsFooter>
                     <button
                       nz-button
                       nzType="primary"
-                      (click)="selectedTabIndex.set(0)">
-                      {{ "codezen.projectDetail.submitFirstReview" | translate }}
+                      (click)="selectedTabIndex.set(0)"
+                    >
+                      {{
+                        "codezen.projectDetail.submitFirstReview" | translate
+                      }}
                     </button>
                   </ng-template>
                 </nz-empty>
@@ -126,15 +143,23 @@
           <ng-template #guidelinesTitle>
             <span>
               <span nz-icon nzType="book"></span>
-              {{ "codezen.projectDetail.guidelines" | translate }} ({{ guidelines().length }})
+              {{ "codezen.projectDetail.guidelines" | translate }} ({{
+                guidelines().length
+              }})
             </span>
           </ng-template>
 
           <ng-template nz-tab>
             <div class="guidelines-section">
               <div class="guidelines-header">
-                <h3>{{ "codezen.projectDetail.customGuidelines" | translate }}</h3>
-                <p>{{ "codezen.projectDetail.guidelinesDescription" | translate }}</p>
+                <h3>
+                  {{ "codezen.projectDetail.customGuidelines" | translate }}
+                </h3>
+                <p>
+                  {{
+                    "codezen.projectDetail.guidelinesDescription" | translate
+                  }}
+                </p>
               </div>
 
               <div class="add-guideline">
@@ -142,13 +167,13 @@
                   nz-input
                   [ngModel]="newGuideline()"
                   (ngModelChange)="newGuideline.set($event)"
-                  [placeholder]="'codezen.projectDetail.guidelinePlaceholder' | translate"
-                  [nzAutosize]="{ minRows: 2, maxRows: 4 }">
+                  [placeholder]="
+                    'codezen.projectDetail.guidelinePlaceholder' | translate
+                  "
+                  [nzAutosize]="{ minRows: 2, maxRows: 4 }"
+                >
                 </textarea>
-                <button
-                  nz-button
-                  nzType="primary"
-                  (click)="addGuideline()">
+                <button nz-button nzType="primary" (click)="addGuideline()">
                   <span nz-icon nzType="plus"></span>
                   {{ "codezen.projectDetail.addGuideline" | translate }}
                 </button>
@@ -159,26 +184,48 @@
               <nz-list
                 *ngIf="guidelines().length > 0; else noGuidelines"
                 [nzDataSource]="guidelines()"
-                [nzRenderItem]="guidelineItem">
-
+                [nzRenderItem]="guidelineItem"
+              >
                 <ng-template #guidelineItem let-guideline>
-                  <nz-list-item>
+                  <nz-list-item [nzActions]="[deleteAction]">
                     <nz-list-item-meta>
                       <nz-list-item-meta-avatar>
-                        <span nz-icon nzType="check-circle" nzTheme="fill" style="color: #52c41a;"></span>
+                        <span
+                          nz-icon
+                          nzType="check-circle"
+                          nzTheme="fill"
+                          style="color: #52c41a"
+                        ></span>
                       </nz-list-item-meta-avatar>
                       <nz-list-item-meta-description>
                         {{ guideline.ruleText }}
                       </nz-list-item-meta-description>
                     </nz-list-item-meta>
+
+                    <ng-template #deleteAction>
+                      <button
+                        nz-button
+                        nzType="text"
+                        nzDanger
+                        [title]="
+                          'codezen.projectDetail.deleteGuideline' | translate
+                        "
+                        (click)="deleteGuideline(guideline, $event)"
+                      >
+                        <span nz-icon nzType="delete"></span>
+                      </button>
+                    </ng-template>
                   </nz-list-item>
                 </ng-template>
               </nz-list>
 
               <ng-template #noGuidelines>
                 <nz-empty
-                  [nzNotFoundContent]="'codezen.projectDetail.noGuidelines' | translate"
-                  nzNotFoundImage="simple">
+                  [nzNotFoundContent]="
+                    'codezen.projectDetail.noGuidelines' | translate
+                  "
+                  nzNotFoundImage="simple"
+                >
                 </nz-empty>
               </ng-template>
             </div>

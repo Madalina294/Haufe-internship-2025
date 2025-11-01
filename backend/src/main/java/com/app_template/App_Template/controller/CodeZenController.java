@@ -157,6 +157,19 @@ public class CodeZenController {
     }
 
     /**
+     * DELETE /api/v1/projects/{id}/guidelines/{guidelineId}
+     * Delete a guideline from a project.
+     */
+    @DeleteMapping("/{id}/guidelines/{guidelineId}")
+    public ResponseEntity<Void> deleteGuideline(
+            @PathVariable Long id,
+            @PathVariable Long guidelineId) {
+        User user = getCurrentUser();
+        codeZenService.deleteGuideline(id, guidelineId, user);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
      * POST /api/v1/projects/{id}/reviews/{reviewId}/comments
      * Post a question/comment on a review and get AI response.
      */
